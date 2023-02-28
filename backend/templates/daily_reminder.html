@@ -1,0 +1,18 @@
+<mark>The below are the pending tasks which needs to be completed. Complete the tasks before deadline and update it in the Kanban app</mark>
+<h1 style="color:red">Pending Tasks</h1>
+<table style="border: 1px solid black">
+    <tr>
+        <th>List Name</th>
+        <th>Card Name</th>
+        <th>Card Content</th>
+        <th>Deadline</th>
+    </tr>
+    {% for task in data %}
+        <tr>
+            <td>{{task.listname}}</td>
+            <td>{{task.cardname}}</td>
+            <td>{{task.cardcontent}}</td>
+            <td>{{task.deadline}}</td>
+        </tr>
+    {% endfor %}
+</table>

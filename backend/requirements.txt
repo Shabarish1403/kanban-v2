@@ -1,0 +1,12 @@
+Flask==2.0.1
+Flask-SQLAlchemy==2.5.1
+flask-restful
+flask-cors
+flask-restplus
+flask-security-too
+redis
+celery[redis]
+pandas
+yagmail
+weasyprint
+Flask-Caching

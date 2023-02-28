@@ -1,0 +1,656 @@
+openapi: 3.0.3
+info:
+  title: Kanban Application V2
+  description:
+    <h2> Role Table Schema </h2> 
+      <table>
+        <thead>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>Integer</td>
+            <td>Primary Key</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>Unique</td>
+          </tr>
+          <tr>
+            <td>description</td>
+            <td>String</td>
+          </tr>
+        </tbody>
+      </table>
+
+    <h2> User Table Schema </h2> 
+      <table>
+        <thead>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>Integer</td>
+            <td>Primary Key, Auto Increment</td>
+          </tr>
+          <tr>
+            <td>email</td>
+            <td>String</td>
+            <td>Not Null, Unique</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>password</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>active</td>
+            <td>Boolean</td>
+          </tr>
+          <tr>
+            <td>fs_uniquifier</td>
+            <td>String</td>
+            <td>Not Null, Unique</td>
+          </tr>
+        </tbody>
+      </table>
+
+    <h2> List Table Schema </h2> 
+      <table>
+        <thead>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>Integer</td>
+            <td>Primary Key, Auto Increment</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>update_date</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>      
+          <tr>
+            <td>user_id</td>
+            <td>Integer</td>
+            <td>Foreign Key (user.id), Not Null</td>
+          </tr>         
+        </tbody>
+      </table>
+
+    <h2> Card Table Schema </h2> 
+      <table>
+        <thead>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>Integer</td>
+            <td>Primary Key, Auto Increment</td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>content</td>
+            <td>String</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>deadline</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>toggle</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>
+          <tr>
+            <td>create_date</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>      
+          <tr>
+            <td>complete_date</td>
+            <td>String</td>
+            <td>Not Null</td>
+          </tr>      
+          <tr>
+            <td>list_id</td>
+            <td>Integer</td>
+            <td>Foreign Key (list.id), Not Null</td>
+        </tbody>
+      </table>
+
+    <h2> Error Codes </h2> 
+      <table>
+        <thead>
+          <th>Resource</th>
+          <th>Error Code</th>
+          <th>Message</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>User</td>
+            <td>USER001</td>
+            <td>User Id is required</td>
+          </tr>
+          <tr>
+            <td>List</td>
+            <td>LIST001</td>
+            <td>List Name is required</td>
+          </tr>
+          <tr>
+            <td>List</td>
+            <td>LIST002</td>
+            <td>List Name is already exists</td>
+          </tr>
+          <tr>
+            <td>List</td>
+            <td>LIST003</td>
+            <td>List Id is required</td>
+          </tr>          
+          <tr>
+            <td>Card</td>
+            <td>CARD001</td>
+            <td>Card Name is required</td>
+          </tr>
+          <tr>
+            <td>Card</td>
+            <td>CARD002</td>
+            <td>Deadline is required</td>
+          </tr>
+          <tr>
+            <td>Card</td>
+            <td>CARD003</td>
+            <td>The Date must be Bigger or Equal to today date</td>
+          </tr>  
+          <tr>
+            <td>Card</td>
+            <td>CARD004</td>
+            <td>Card Name is already exists in the given list</td>
+          </tr>
+        </tbody>
+      </table>
+
+  version: 1.0.0
+  
+servers:
+  - url: http://127.0.0.1:5000/
+tags:
+  - name: User
+    description: User Management
+  - name: List
+    description: List Management
+  - name: Card
+    description: Card Management
+  - name: Toggle
+    description: Toggle card
+paths:
+  /api/{email}:
+    get:
+      tags:
+        - User
+      summary: All data of the particular user
+      description: All data of the particular user
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema:
+            type: string
+            example: test@gmail.com
+      responses:
+        '200':
+          description: Fetched successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  data:
+                    type: object
+                    example: {data1}
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+          
+  /api/adduser:
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      description: Create a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test@gmail.com
+                name:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: masked password
+                active:
+                  type: integer
+                  example: 1
+                fs_uniquifier:
+                  type: string
+                  example: skdasdasbdja
+      responses:
+        '200':
+          description: List created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: list_name
+                  user_id:
+                    type: integer
+                    example: 1
+                  
+        '409':
+          description: List Name already exists
+        '500':
+          description: Internal Server Error
+          
+  /api/lists/{user_id}:
+    get:
+      tags:
+        - List
+      summary: All list objects of the user
+      description: All list objects of the user
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    example: 2
+                  lists:
+                    type: array
+                    example: [list_objects]
+                    
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+          
+  /api/createlist/{user_id}:
+    post:
+      tags:
+        - List
+      summary: Create a new list
+      description: Create a new list
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: list_name
+      responses:
+        '200':
+          description: List created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: list_name
+                  user_id:
+                    type: integer
+                    example: 1
+                  
+        '409':
+          description: List Name already exists
+        '500':
+          description: Internal Server Error
+
+  /api/deletelist/{list_id}:
+    delete:
+      tags:
+       - List
+      summary: Delete the list
+      description: Delete the list
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: List not found
+        '500':
+          description: Intenal Server Error
+          
+  /api/updatelist/{list_id}:
+    put:
+      tags:
+        - List
+      summary: Update the list
+      description: Update the list
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: list_name
+      responses:
+        '200':
+          description: List updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: list_name
+                  user_id:
+                    type: integer
+                    example: 1
+                  
+        '404':
+          description: List Name not exists
+        '500':
+          description: Internal Server Error
+          
+  /api/cards/{list_id}:
+    get:
+      tags:
+        - Card
+      summary: All card objects of the list
+      description: All card objects of the list
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list_id:
+                    type: integer
+                    example: 2
+                  cards:
+                    type: array
+                    example: [card_objects]
+                    
+        '404':
+          description: Card not found
+        '500':
+          description: Internal Server Error
+  
+  /api/createcard/{list_id}:
+    post:
+      tags:
+        - Card
+      summary: Create a new card
+      description: Create a new card
+      parameters:
+        - in: path
+          name: list_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: card_name
+                content:
+                  type: string
+                  example: card_content
+                deadline:
+                  type: string
+                  example: yyyy-mm-dd
+      responses:
+        '201':
+          description: Card created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: card_name
+                  content:
+                    type: string
+                    example: card_content
+                  deadline:
+                    type: string
+                    example: yyyy-mm-dd
+                  toggle:
+                    type: string
+                    example: '0'
+                  create_date:
+                    type: string
+                    example: yyyy-mm-dd
+                  complete_date:
+                    type: string
+                    example: yyyy-mm-dd
+                  list_id:
+                    type: integer
+                    example: 1
+        '409':
+          description: Card Name already exists
+        '500':
+          description: Internal Server Error
+
+  /api/deletecard/{card_id}:
+    delete:
+      tags:
+       - Card
+      summary: Delete the card
+      description: Delete the card
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      responses:
+        '200':
+          description: Successfully Deleted
+        '404':
+          description: Card not found
+        '500':
+          description: Intenal Server Error
+          
+  /api/updatecard/{card_id}:
+    put:
+      tags:
+        - Card
+      summary: Update the card
+      description: Update the card
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: card_name
+                content:
+                  type: string
+                  example: card_content
+                deadline:
+                  type: string
+                  example: yyyy-mm-dd
+                list_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Card updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 2
+                  name:
+                    type: string
+                    example: card_name
+                  content:
+                    type: string
+                    example: card_content
+                  deadline:
+                    type: string
+                    example: yyyy-mm-dd
+                  toggle:
+                    type: string
+                    example: "0"     
+                  create_date:
+                    type: string
+                    example: yyyy-mm-dd
+                  complete_date:
+                    type: string
+                    example: yyyy-mm-dd                    
+                  list_id:
+                    type: integer
+                    example: 1
+                  
+        '404':
+          description: Card Name not exists
+        '500':
+          description: Internal Server Error
+  
+  /api/togglecard/{card_id}:
+    put:
+      tags:
+        - Toggle
+      summary: Update the card toggle
+      description: Update the card toggle
+      parameters:
+        - in: path
+          name: card_id
+          required: true
+          schema:
+            type: integer
+            example: 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                toggle:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Card toggle updated successfully
+        '404':
+          description: Card id not exists
+        '500':
+          description: Internal Server Error
+          

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Report</title>
+</head>
+<body>
+    <h1 align="center">Monthly Report</h1>
+    <h3>Hello {{data.username}},</h3>
+    <h4>Please find the below details of the monthly report of this month</h4><br>
+    <div>
+        <h5>Total tasks: {{data.total}}</h5>
+        <h5 style="color:green">Completed tasks: {{data.completed}}</h5>
+        <h5 style="color:orange">Pending tasks: {{data.pending}}</h5>
+        <h5 style="color:red">Incompleted tasks: {{data.incomplete}}</h5>
+    </div><br>
+    <!-- <img src="../monthly_report.png" align="center"> -->
+</body>
+</html>

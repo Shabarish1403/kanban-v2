@@ -1,0 +1,53 @@
+<!-- Modal -->
+<div class="modal fade" id="editCard{{list.id}}-{{card.id}}" tabindex="-1" aria-labelledby="editCardLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCardLabel">Edit Card</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="/updatecard/{{card.id}}" method="post">
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <select class="form-select text-center" name="list">
+                            {% for l in lists %}
+                                {% if l.name == list.name %}
+                                    <option value="{{l.name}}" selected>{{l.name}}</option>
+                                {% else %}
+                                    <option value="{{l.name}}">{{l.name}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" type="text" name="name" value="{{card.name}}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Content</label>
+                        <textarea class="form-control" name="content">{{card.content}}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Deadline</label>
+                        <input class="form-control" type="date" name="deadline" value="{{card.deadline}}" id="calendar{{card.id}}" onchange="TDate({{card.id}})" required>
+                    </div>
+
+                </div>        
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+                
+            </form>
+
+        </div>
+    </div>
+</div>
